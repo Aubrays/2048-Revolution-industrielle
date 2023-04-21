@@ -80,8 +80,6 @@ GameManager.prototype.setup = function () {
     this.addStartTiles();
   }
 
-  // Localize page elements
-  this.localizeElements();
   
   // Fill legend
   this.fillLegend();
@@ -89,23 +87,6 @@ GameManager.prototype.setup = function () {
   // Update the actuator
   this.actuate();
 };
-
-// Passive localization of page elements
-GameManager.prototype.localizeElements = function () {
-    var elementArray = [
-        'game-intro',
-        'restart-button',
-        'retry-button',
-        'keep-playing-button',
-        'game-explanation',
-        'disclaimer',
-        'tile-legend',
-        'credits'
-      ];
-    for (var i in elementArray) {
-      LocalizeElement(elementArray[i]);
-    }
-  };
 
 // Fill legend
 GameManager.prototype.fillLegend = function () {
@@ -126,7 +107,7 @@ GameManager.prototype.fillLegend = function () {
     cell.appendChild(img);
     grid.appendChild(cell);
     row.appendChild(grid);
-    p.textContent = Localize(exp);
+    p.textContent = exp;
     row.appendChild(p);
 
     legend[0].appendChild(row);

@@ -115,51 +115,32 @@ HTMLActuator.prototype.updateScore = function (score) {
   this.score = score;
 
   // this.scoreContainer.textContent = this.score;
-  this.scoreContainer.textContent = Localize( "p" + this.score );
+  this.scoreContainer.textContent = this.score;
 
   if (difference > 0) {
     var addition = document.createElement("div");
     addition.classList.add("score-addition");
     // addition.textContent = "+" + difference;
-    addition.textContent = Localize( "p" + this.score );
+    addition.textContent = this.score;
 
     this.scoreContainer.appendChild(addition);
   }
 };
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
-  this.bestContainer.textContent = Localize( "p" + bestScore);
+  this.bestContainer.textContent =  bestScore;
 };
 
 HTMLActuator.prototype.message = function (won) {
   var type    = won ? "game-won" : "game-over";
-  var message = Localize(type);
+  var message = type;
 
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
-  
-  this.clearContainer(this.sharingContainer);
-  this.sharingContainer.appendChild(this.scoreTweetButton());
-  twttr.widgets.load();
 };
 
 HTMLActuator.prototype.clearMessage = function () {
   // IE only takes one value to remove at a time.
   this.messageContainer.classList.remove("game-won");
   this.messageContainer.classList.remove("game-over");
-};
-
-HTMLActuator.prototype.scoreTweetButton = function () {
-  var tweet = document.createElement("a");
-  tweet.classList.add("twitter-share-button");
-  tweet.setAttribute("href", "https://twitter.com/share");
-  tweet.setAttribute("data-via", "giampiex");
-  tweet.setAttribute("data-url", "http://git.io/starwars");
-  tweet.setAttribute("data-counturl", "http://0x0800.github.io/2048-STARWARS");
-  tweet.textContent = "Tweet";
-
-  var text = Localize("tweet1") + Localize( this.score ).toUpperCase() + Localize("tweet2");
-  tweet.setAttribute("data-text", text);
-
-  return tweet;
 };

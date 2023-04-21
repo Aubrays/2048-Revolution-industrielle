@@ -3,26 +3,27 @@
 
 $field-width: 500px;
 $grid-spacing: 15px;
-$legend-spacing: $grid-spacing / 2;
+$legend-spacing: calc($grid-spacing / 2);
 $grid-row-cells: 4;
-$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+$tile-size: calc(($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells);
 $tile-border-radius: 3px;
 $legend-border-radius: 2px;
 
 $mobile-threshold: $field-width + 20px;
 
-$text-color: #7F6F89;
-$bright-text-color: #9E87AE;
-$points-text-color: #845EA6;
+$text-color: #DEF2F7;
+$bright-text-color: #12414F;
+$points-text-color: #237E9A;
 
-$tile-color: #191919;
+$tile-color: #0A2833;
 $tile-gold-color: #FFFFFF;
 $tile-gold-glow-color: lighten($tile-gold-color, 15%);
 
 $mix-perc: 75%;
 
+$body-color: #565658;
 $game-container-margin-top: 40px;
-$game-container-background: #3D2D49;
+$game-container-background: #52B9D8;
 
 $transition-speed: 100ms;
 
@@ -48,7 +49,7 @@ html, body {
   margin: 0;
   padding: 0;
 
-  background-color: #070D06;
+  background-color: $body-color;
   color: $text-color;
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 18px;
@@ -56,13 +57,18 @@ html, body {
 
 body {
   padding: 80px 0;
-  background-image: url(img/top-bg.jpg);
+  background-image: url(img/top-bg.webp);
   background-position: top center;
   background-repeat: no-repeat;
 }
 
 .heading {
   @include clearfix;
+  margin-right: 15px;
+}
+
+.above-game {
+  margin-right: 15px;
 }
 
 h1.title {
@@ -82,7 +88,7 @@ h1.title {
       line-height: $title-container-size;
       text-align: center;
       font-weight: bold;
-      content: "Star Wars";
+      content: "Industrialisation";
   }
 }
 
@@ -398,8 +404,8 @@ hr {
 
     &.tile-#{$power} .tile-inner {
       // Calculate base background color
-      $gold-percent: ($exponent - 1) / ($limit - 1) * 100;
-      $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent);
+      $gold-percent: calc(($exponent - 1) / ($limit - 1) * 100);
+      $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent * 1%);
 
       $nth-color: nth($special-colors, $exponent);
 
@@ -418,11 +424,11 @@ hr {
       background: $mixed-background;
 
       // Add glow
-      $glow-opacity: max($exponent - 4, 0) / ($limit - 4);
+      $glow-opacity: calc(max($exponent - 4, 0) / ($limit - 4));
 
       @if not $special-background {
-        box-shadow: 0 0 30px 10px rgba($tile-gold-glow-color, $glow-opacity / 1.8),
-                    inset 0 0 0 1px rgba(white, $glow-opacity / 3);
+        box-shadow: 0 0 30px 10px rgba($tile-gold-glow-color, calc($glow-opacity / 1.8)),
+                    inset 0 0 0 1px rgba(white, calc($glow-opacity / 3));
       }
 
       // Adjust font size for bigger numbers
@@ -521,7 +527,7 @@ hr {
   $field-width: 280px;
   $grid-spacing: 10px;
   $grid-row-cells: 4;
-  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+  $tile-size: calc(($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells);
   $tile-border-radius: 3px;
   $game-container-margin-top: 17px;
 
@@ -601,8 +607,8 @@ hr {
   @include clearfix;
   
   p {
-    margin-left: ($field-width / 3);
-    margin-top: ($field-width / 12);
+    margin-left: calc($field-width / 3);
+    margin-top: calc($field-width / 12);
     text-transform: uppercase;
   }
 }
@@ -624,8 +630,8 @@ hr {
 
   background: $game-container-background;
   border-radius: $legend-border-radius * 2;
-  width: ($field-width / 4) + $legend-border-radius * 2 - 1;
-  height: ($field-width / 4) + $legend-border-radius * 2 - 1;
+  width: calc(($field-width / 4) + $legend-border-radius * 2 - 1px);
+  height: calc(($field-width / 4) + $legend-border-radius * 2 - 1px);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -657,8 +663,8 @@ $exponent: 1;
 
   .cell-#{$power} {
     // Calculate base background color
-    $gold-percent: ($exponent - 1) / ($limit - 1) * 100;
-    $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent);
+    $gold-percent: calc(($exponent - 1) / ($limit - 1) * 100);
+    $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent * 1%);
 
     $nth-color: nth($special-colors, $exponent);
 
@@ -677,11 +683,11 @@ $exponent: 1;
     background: $mixed-background;
 
     // Add glow
-    $glow-opacity: max($exponent - 4, 0) / ($limit - 4);
+    $glow-opacity: calc(max($exponent - 4, 0) / ($limit - 4));
 
     @if not $special-background {
-      box-shadow: 0 0 30px 5px rgba($tile-gold-glow-color, $glow-opacity / 1.8),
-                  inset 0 0 0 1px rgba(white, $glow-opacity / 3);
+      box-shadow: 0 0 30px 5px rgba($tile-gold-glow-color, calc($glow-opacity / 1.8)),
+                  inset 0 0 0 1px rgba(white, calc($glow-opacity / 3));
     }
   }
 
