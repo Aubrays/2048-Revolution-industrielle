@@ -1,10 +1,18 @@
 @import "fonts/clear-sans.css";
+@font-face {
+  font-family: "Gravitas One";
+  src: local("Gravitas One"), url("fonts/GravitasOne-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  src: local("Poppins"), url("fonts/Poppins-Regular.ttf") format("truetype");
+}
 html, body {
   margin: 0;
   padding: 0;
   background-color: #565658;
   color: #DEF2F7;
-  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   font-size: 18px;
 }
 
@@ -34,6 +42,7 @@ body {
 }
 
 h1.title {
+  font-family: "Gravitas One", "Arial", serif;
   font-size: 80px;
   font-weight: bold;
   margin: 0;
