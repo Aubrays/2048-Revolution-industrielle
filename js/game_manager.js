@@ -92,6 +92,9 @@ GameManager.prototype.setup = function () {
 GameManager.prototype.fillLegend = function () {
   
   var legend = document.getElementsByClassName("tile-legend");
+  
+  legend[0].innerHTML = "";
+
   for (var i = 1; i <= 11; i++) {
     var exp = Math.pow(2, i);
     var row = document.createElement("div");
