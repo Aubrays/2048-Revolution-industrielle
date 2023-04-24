@@ -1,11 +1,16 @@
-@import "helpers";
+
+@use "sass:math";
+
+@use "sass:color";
+@use "sass:list";
+@use "helpers";
 @import "fonts/clear-sans.css";
 
 $field-width: 500px;
 $grid-spacing: 15px;
-$legend-spacing: calc($grid-spacing / 2);
+$legend-spacing: $grid-spacing * 0.5;
 $grid-row-cells: 4;
-$tile-size: calc(($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells);
+$tile-size: math.div($field-width - $grid-spacing * ($grid-row-cells + 1), $grid-row-cells);
 $tile-border-radius: 3px;
 $legend-border-radius: 2px;
 
@@ -17,7 +22,7 @@ $points-text-color: #237E9A;
 
 $tile-color: #0A2833;
 $tile-gold-color: #FFFFFF;
-$tile-gold-glow-color: lighten($tile-gold-color, 15%);
+$tile-gold-glow-color: color.adjust($tile-gold-color, $lightness: 15%);
 
 $mix-perc: 75%;
 
@@ -63,7 +68,7 @@ body {
 }
 
 .heading {
-  @include clearfix;
+  @include helpers.clearfix;
   margin-right: 15px;
 }
 
@@ -100,7 +105,7 @@ h1.title {
 
 }
 
-@include keyframes(move-up) {
+@include helpers.keyframes(move-up) {
   0% {
     top: 25px;
     opacity: 1;
@@ -155,8 +160,8 @@ h1.title {
     font-weight: bold;
     color: rgba($text-color, .9);
     z-index: 100;
-    @include animation(move-up 600ms ease-in);
-    @include animation-fill-mode(both);
+    @include helpers.animation(move-up 600ms ease-in);
+    @include helpers.animation-fill-mode(both);
   }
 }
 
@@ -189,7 +194,7 @@ strong {
 
 hr {
   border: none;
-  border-bottom: 1px solid darken($text-color, 30%);
+  border-bottom: 1px solid color.adjust($text-color, $lightness: -30%);
   margin-top: 20px;
   margin-bottom: 30px;
 }
@@ -199,7 +204,7 @@ hr {
   margin: 0 auto;
 }
 
-@include keyframes(fade-in) {
+@include helpers.keyframes(fade-in) {
   0% {
     opacity: 0;
   }
@@ -212,7 +217,7 @@ hr {
 // Styles for buttons
 @mixin button {
   display: inline-block;
-  background: lighten($game-container-background, 5%);
+  background: color.adjust($game-container-background, $lightness: 5%);
   border-radius: 3px;
   padding: 0 20px;
   text-decoration: none;
@@ -291,8 +296,8 @@ hr {
         margin-left: 10px;
       }
 
-      @include animation(fade-in 800ms ease $transition-speed * 12);
-      @include animation-fill-mode(both);
+      @include helpers.animation(fade-in 800ms ease $transition-speed * 12);
+      @include helpers.animation-fill-mode(both);
 
       &.game-won {
         background: rgba($tile-gold-color, .5);
@@ -350,8 +355,8 @@ hr {
 
   .tile {
     &, .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
+      width: math.ceil($tile-size);
+      height: math.ceil($tile-size);
       line-height: $tile-size + 10px;
     }
 
@@ -359,9 +364,9 @@ hr {
     @for $x from 1 through $grid-row-cells {
       @for $y from 1 through $grid-row-cells {
         &.tile-position-#{$x}-#{$y} {
-          $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
-          $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
-          @include transform(translate($xPos, $yPos));
+          $xPos: math.floor(($tile-size + $grid-spacing) * ($x - 1));
+          $yPos: math.floor(($tile-size + $grid-spacing) * ($y - 1));
+          @include helpers.transform(translate($xPos, $yPos));
         }
       }
     }
@@ -391,7 +396,7 @@ hr {
   }
 
   // Movement transition
-  @include transition($transition-speed ease-in-out);
+  @include helpers.transition($transition-speed ease-in-out);
   -webkit-transition-property: -webkit-transform;
   -moz-transition-property: -moz-transform;
   transition-property: transform;
@@ -400,20 +405,20 @@ hr {
   
   // Build tile colors
   @while $exponent <= $limit {
-    $power: pow($base, $exponent);
+    $power: helpers.pow($base, $exponent);
 
     &.tile-#{$power} .tile-inner {
       // Calculate base background color
-      $gold-percent: calc(($exponent - 1) / ($limit - 1) * 100);
-      $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent * 1%);
+      $gold-percent: math.div($exponent - 1, $limit - 1) * 100;
+      $mixed-background: color.mix($tile-gold-color, $tile-color, $gold-percent);
 
-      $nth-color: nth($special-colors, $exponent);
+      $nth-color: list.nth($special-colors, $exponent);
 
-      $special-background: nth($nth-color, 1);
-      $bright-color: nth($nth-color, 2);
+      $special-background: list.nth($nth-color, 1);
+      $bright-color: list.nth($nth-color, 2);
 
       @if $special-background {
-        $mixed-background: mix($special-background, $mixed-background, $mix-perc);
+        $mixed-background: color.mix($special-background, $mixed-background, $mix-perc);
       }
 
       @if $bright-color {
@@ -424,11 +429,11 @@ hr {
       background: $mixed-background;
 
       // Add glow
-      $glow-opacity: calc(max($exponent - 4, 0) / ($limit - 4));
+      $glow-opacity: math.div(max($exponent - 4, 0), $limit - 4);
 
       @if not $special-background {
-        box-shadow: 0 0 30px 10px rgba($tile-gold-glow-color, calc($glow-opacity / 1.8)),
-                    inset 0 0 0 1px rgba(white, calc($glow-opacity / 3));
+        box-shadow: 0 0 30px 10px rgba($tile-gold-glow-color, math.div($glow-opacity, 1.8)),
+                    inset 0 0 0 1px rgba(white, math.div($glow-opacity, 3));
       }
 
       // Adjust font size for bigger numbers
@@ -436,13 +441,13 @@ hr {
         font-size: 45px;
 
         // Media queries placed here to avoid carrying over the rest of the logic
-        @include smaller($mobile-threshold) {
+        @include helpers.smaller($mobile-threshold) {
           font-size: 25px;
         }
       } @else if $power >= 1000 {
         font-size: 35px;
 
-        @include smaller($mobile-threshold) {
+        @include helpers.smaller($mobile-threshold) {
           font-size: 15px;
         }
       }
@@ -454,55 +459,55 @@ hr {
   // Super tiles (above 2048)
   &.tile-super .tile-inner {
     color: $bright-text-color;
-    background: mix(#333, $tile-gold-color, 95%);
+    background: color.mix(#333, $tile-gold-color, 95%);
 
     font-size: 30px;
 
-    @include smaller($mobile-threshold) {
+    @include helpers.smaller($mobile-threshold) {
       font-size: 10px;
     }
   }
 }
 
-@include keyframes(appear) {
+@include helpers.keyframes(appear) {
   0% {
     opacity: 0;
-    @include transform(scale(0));
+    @include helpers.transform(scale(0));
   }
 
   100% {
     opacity: 1;
-    @include transform(scale(1));
+    @include helpers.transform(scale(1));
   }
 }
 
 .tile-new .tile-inner {
-  @include animation(appear 200ms ease $transition-speed);
-  @include animation-fill-mode(backwards);
+  @include helpers.animation(appear 200ms ease $transition-speed);
+  @include helpers.animation-fill-mode(backwards);
 }
 
-@include keyframes(pop) {
+@include helpers.keyframes(pop) {
   0% {
-    @include transform(scale(0));
+    @include helpers.transform(scale(0));
   }
 
   50% {
-    @include transform(scale(1.2));
+    @include helpers.transform(scale(1.2));
   }
 
   100% {
-    @include transform(scale(1));
+    @include helpers.transform(scale(1));
   }
 }
 
 .tile-merged .tile-inner {
   z-index: 20;
-  @include animation(pop 200ms ease $transition-speed);
-  @include animation-fill-mode(backwards);
+  @include helpers.animation(pop 200ms ease $transition-speed);
+  @include helpers.animation-fill-mode(backwards);
 }
 
 .above-game {
-  @include clearfix;
+  @include helpers.clearfix;
 }
 
 .game-intro {
@@ -522,12 +527,12 @@ hr {
   margin-top: 50px;
 }
 
-@include smaller($mobile-threshold) {
+@include helpers.smaller($mobile-threshold) {
   // Redefine variables for smaller screens
   $field-width: 280px;
   $grid-spacing: 10px;
   $grid-row-cells: 4;
-  $tile-size: calc(($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells);
+  $tile-size: math.div($field-width - $grid-spacing * ($grid-row-cells + 1), $grid-row-cells);
   $tile-border-radius: 3px;
   $game-container-margin-top: 17px;
 
@@ -604,11 +609,11 @@ hr {
 
 .legend-row {
   padding: 10px 5px;
-  @include clearfix;
+  @include helpers.clearfix;
   
   p {
-    margin-left: calc($field-width / 3);
-    margin-top: calc($field-width / 12);
+    margin-left: math.div($field-width, 3);
+    margin-top: math.div($field-width, 12);
     text-transform: uppercase;
   }
 }
@@ -630,8 +635,8 @@ hr {
 
   background: $game-container-background;
   border-radius: $legend-border-radius * 2;
-  width: calc(($field-width / 4) + $legend-border-radius * 2 - 1px);
-  height: calc(($field-width / 4) + $legend-border-radius * 2 - 1px);
+  width: ($field-width * 0.25) + $legend-border-radius * 2 - 1;
+  height: ($field-width * 0.25) + $legend-border-radius * 2 - 1;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -659,20 +664,20 @@ $exponent: 1;
 
 // Build tile colors
 @while $exponent <= $limit {
-  $power: pow($base, $exponent);
+  $power: helpers.pow($base, $exponent);
 
   .cell-#{$power} {
     // Calculate base background color
-    $gold-percent: calc(($exponent - 1) / ($limit - 1) * 100);
-    $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent * 1%);
+    $gold-percent: math.div($exponent - 1, $limit - 1) * 100;
+    $mixed-background: color.mix($tile-gold-color, $tile-color, $gold-percent);
 
-    $nth-color: nth($special-colors, $exponent);
+    $nth-color: list.nth($special-colors, $exponent);
 
-    $special-background: nth($nth-color, 1);
-    $bright-color: nth($nth-color, 2);
+    $special-background: list.nth($nth-color, 1);
+    $bright-color: list.nth($nth-color, 2);
 
     @if $special-background {
-      $mixed-background: mix($special-background, $mixed-background, $mix-perc);
+      $mixed-background: color.mix($special-background, $mixed-background, $mix-perc);
     }
 
     @if $bright-color {
@@ -683,11 +688,11 @@ $exponent: 1;
     background: $mixed-background;
 
     // Add glow
-    $glow-opacity: calc(max($exponent - 4, 0) / ($limit - 4));
+    $glow-opacity: math.div(max($exponent - 4, 0), $limit - 4);
 
     @if not $special-background {
-      box-shadow: 0 0 30px 5px rgba($tile-gold-glow-color, calc($glow-opacity / 1.8)),
-                  inset 0 0 0 1px rgba(white, calc($glow-opacity / 3));
+      box-shadow: 0 0 30px 5px rgba($tile-gold-glow-color, math.div($glow-opacity, 1.8)),
+                  inset 0 0 0 1px rgba(white, math.div($glow-opacity, 3));
     }
   }
 

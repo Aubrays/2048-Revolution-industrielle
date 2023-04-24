@@ -1,2 +1,6 @@
 .sass-cache/
 .DS_Store
+# NPM only use for sass-migrator as dev-dependency
+node_modules/
+package.json
+package-lock.json
